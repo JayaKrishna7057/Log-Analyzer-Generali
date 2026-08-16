@@ -1,0 +1,44 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Backend: mvn spring-boot:run",
+      "type": "shell",
+      "command": "mvn",
+      "args": ["-f", "backend", "spring-boot:run"],
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "group": "app",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Frontend: npm run dev",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "group": "app",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Start App (Backend + Frontend)",
+      "dependsOn": ["Backend: mvn spring-boot:run", "Frontend: npm run dev"],
+      "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
