@@ -1,0 +1,137 @@
+*********************************************************************************************************
+**** IDEXECUTION: 1476461476 
+****         PID: -1 
+****       BATCH: ODS_FillerDomain 
+****       CLASS: com.rgigroup.ods.batch.alignment.domains.BatchDomainOds 
+****     VERSION: 1.0.0 
+****       START: 17/08/2026 06:35:48 
+*********************************************************************************************************
+**** PARAMETERS :
+   - System.Jdbc.MetaInfoLoader:it.rgi.dbobjects.db.InfoLoader;com.rgigroup.ods.dbobjects.db.InfoLoader;it.rgi.tools.batch.dbobjects.db.InfoLoader;it.rgi.tools.migrations.quadrature.dbobjects.db.InfoLoader
+   - System.Jdbc.DriverName:org.postgresql.Driver
+   - System.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodpass002.postgres.database.azure.com:5432/passinsurance?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - System.Jdbc.Username:pooliabgesprod-identity
+   - System.Jdbc.Password:********
+   - System.Jdbc.Crypted:0
+   - System.Jdbc.PreparedStatement.Cache:1
+   - System.Jdbc.CaricamentoImmediatoCache:0
+   - System.Jdbc.PISysTableName:PISYSTEMPROPERTIES
+   - System.Jdbc.CryptKeyfile:/app/security.key
+   - DbSource1.Jdbc.DriverName:org.postgresql.Driver
+   - DbSource1.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodpass002.postgres.database.azure.com:5432/passinsurance?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - DbSource1.Jdbc.Username:pooliabgesprod-identity
+   - DbSource1.Jdbc.Password:********
+   - DbSource1.Jdbc.Crypted:0
+   - DbSource1.Jdbc.Commit:1
+   - DbSource1.Jdbc.BatchCommitMode:0
+   - DbSource2.Jdbc.DriverName:org.postgresql.Driver
+   - DbSource2.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodods001.postgres.database.azure.com:5432/ods?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - DbSource2.Jdbc.Username:pooliabgesprod-identity
+   - DbSource2.Jdbc.Password:********
+   - DbSource2.Jdbc.Crypted:0
+   - DbSource2.Jdbc.Commit:1
+   - DbSource2.Jdbc.BatchCommitMode:1
+   - System.BatchThread.Number:10
+   - System.Committer.Number:10
+   - System.QuantumRead.Size:10
+   - System.QuantumCommit.Size:10
+   - System.InfoProdotti.usaVisibilita:1
+   - System.Dispatcher.FilePathName:/app/config-evidence-level.xml
+   - System.Cache.Enabled:1
+   - System.Cache.Serialized:0
+   - System.Cache.IncrementalMode:0
+   - System.RequiredFactorsCheck.Skip:0
+   - System.Log.FolderPathName:.
+   - System.Log.StdOutFileName:stdout.txt
+   - System.Log.StdErrFileName:stderr.txt
+   - System.Log.Append:0
+   - System.Log.StdOut.LogLevel:3
+   - System.Log.Csv.LogLevel:3
+   - System.Log.Performance.LogLevel:3
+   - System.Log.Console.LogLevel:3
+   - System.Log.Jdbc.DriverName:org.postgresql.Driver
+   - System.Log.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodods001.postgres.database.azure.com:5432/ods?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - System.Log.Jdbc.Username:pooliabgesprod-identity
+   - System.Log.Jdbc.Password:********
+   - System.Log.Jdbc.Crypted:0
+   - System.Log.Jdbc.LogLevel:3
+   - System.Log.BufferSizeInBytes:1
+   - System.Log.Performance.TimeSlice:60
+   - System.MultilinguaConfig:file:///app/messages/*.properties
+   - System.MultilinguaConfig.DefaultLang:IT
+   - System.EnableNMigFlag:1
+   - System.UtenteMigrazione.Value:MIGRAZIONE
+   - System.InternationalProject.Value:0
+   - System.PerfMode.Value:0
+   - System.StopWatchEnabled.Value:1
+*********************************************************************************************************
+
+Number of records extracted: 851
+
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : ECCAUSESGUAR IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPSETTORIATTIVITA IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPTIPIREGPREMIO IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : OTINSTALLER IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPAALISTINO IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PGCAUSEPNT IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPBENEFICIARI IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPCLASSIATTIVITA IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPRAMIPROVVPASSIVE IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PCPRDORIG IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPRCOMPAGNIE IS EMPTY
+ERROR : Cannot invoke "String.startsWith(String)" because "fieldName" is null --> DDPPFACTORSVAL : PPVALORIFATTORI.IDFATTORE:NVALORE
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRADVISOR IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PCTYPEADDRESS IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRAUTHORITY IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PGDOCCAUSE IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRCATLEVAUTH IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPINVESTFONDI IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPINVESTFONDI IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPLISTINOCONV IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPINVESTLINEE IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPLINEOFBUSINESS IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PAGROUP IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRPARTNERSECTOR IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPOPZIONISCADENZA IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRPROFILE IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRSCERT IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRCOUPON IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRGROUPPOS IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PRGROUPPRODC IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVVERLINEVAL IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PTTYPEADVISOR IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVVERTRANCHEEX IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVVERTRNCHEXNAVB IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVCOLCOMPOPIN IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVCOLCOMPTYPE IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PTCATSPHRISK IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : VSINSTALLERVS IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVFUNDVEREXNAVB IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVLINEVEREXNAVB IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PVVREASPRACTCANC IS EMPTY
+17/08/2026 06:35:52 --- TABLE=DDPPFACTORSVAL
+E - GenericError --> ERROR : Cannot invoke "String.startsWith(String)" because "fieldName" is null --> DDPPFACTORSVAL : PPVALORIFATTORI.IDFATTORE:NVALORE
+
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPGRUPPIATTIVITA IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPTIPIATTIVITA IS EMPTY
+WARNING com.rgigroup.ods.batch.alignment.domains.table.DomainAndCustomDomainTable : PPTRANCHE IS EMPTY
+
+=====================================================================================
+IDEXECUTION     : 1476461476
+=====================================================================================
+PROCESSING SUMMARY
+=====================================================================================
+Starting time   : 17/08/2026 06:35:52
+End time        : 17/08/2026 06:35:56
+=====================================================================================
+Raw data        : 851
+   - Error      : 1
+   - Warning    : 0
+   - OK         : 850
+=====================================================================================
+Batch life: 4 [sec]
+Average pieces per second : 212.75
+=====================================================================================
+
+
+STATUS: FINISHED_OK_WARNINGS

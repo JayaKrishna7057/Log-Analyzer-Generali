@@ -1,0 +1,259 @@
+*********************************************************************************************************
+**** IDEXECUTION: 1477181509 
+****         PID: -1 
+****       BATCH: ODS_Policy 
+****       CLASS: com.rgigroup.ods.es.batch.alignment.policy.BatchPolicyEs 
+****     VERSION: 1.0.0 
+****       START: 17/08/2026 07:12:19 
+*********************************************************************************************************
+**** PARAMETERS :
+   - System.Jdbc.MetaInfoLoader:it.rgi.dbobjects.db.InfoLoader;com.rgigroup.ods.dbobjects.db.InfoLoader;it.rgi.tools.batch.dbobjects.db.InfoLoader;it.rgi.tools.migrations.quadrature.dbobjects.db.InfoLoader
+   - System.Jdbc.DriverName:org.postgresql.Driver
+   - System.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodpass002.postgres.database.azure.com:5432/passinsurance?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - System.Jdbc.Username:pooliabgesprod-identity
+   - System.Jdbc.Password:********
+   - System.Jdbc.Crypted:0
+   - System.Jdbc.PreparedStatement.Cache:1
+   - System.Jdbc.CaricamentoImmediatoCache:0
+   - System.Jdbc.PISysTableName:PISYSTEMPROPERTIES
+   - System.Jdbc.CryptKeyfile:/app/security.key
+   - DbSource1.Jdbc.DriverName:org.postgresql.Driver
+   - DbSource1.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodpass002.postgres.database.azure.com:5432/passinsurance?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - DbSource1.Jdbc.Username:pooliabgesprod-identity
+   - DbSource1.Jdbc.Password:********
+   - DbSource1.Jdbc.Crypted:0
+   - DbSource1.Jdbc.Commit:1
+   - DbSource1.Jdbc.BatchCommitMode:0
+   - DbSource2.Jdbc.DriverName:org.postgresql.Driver
+   - DbSource2.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodods001.postgres.database.azure.com:5432/ods?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - DbSource2.Jdbc.Username:pooliabgesprod-identity
+   - DbSource2.Jdbc.Password:********
+   - DbSource2.Jdbc.Crypted:0
+   - DbSource2.Jdbc.Commit:1
+   - DbSource2.Jdbc.BatchCommitMode:1
+   - System.BatchThread.Number:10
+   - System.Committer.Number:10
+   - System.QuantumRead.Size:10
+   - System.QuantumCommit.Size:10
+   - System.InfoProdotti.usaVisibilita:1
+   - System.Dispatcher.FilePathName:/app/config-evidence-level.xml
+   - System.Cache.Enabled:1
+   - System.Cache.Serialized:0
+   - System.Cache.IncrementalMode:0
+   - System.RequiredFactorsCheck.Skip:0
+   - System.Log.FolderPathName:.
+   - System.Log.StdOutFileName:stdout.txt
+   - System.Log.StdErrFileName:stderr.txt
+   - System.Log.Append:0
+   - System.Log.StdOut.LogLevel:3
+   - System.Log.Csv.LogLevel:3
+   - System.Log.Performance.LogLevel:3
+   - System.Log.Console.LogLevel:3
+   - System.Log.Jdbc.DriverName:org.postgresql.Driver
+   - System.Log.Jdbc.ConnectionUrl:jdbc:postgresql://psqliabgesprodods001.postgres.database.azure.com:5432/ods?sslmode=require&authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin&ApplicationName=ods
+   - System.Log.Jdbc.Username:pooliabgesprod-identity
+   - System.Log.Jdbc.Password:********
+   - System.Log.Jdbc.Crypted:0
+   - System.Log.Jdbc.LogLevel:3
+   - System.Log.BufferSizeInBytes:1
+   - System.Log.Performance.TimeSlice:60
+   - System.MultilinguaConfig:file:///app/messages/*.properties
+   - System.MultilinguaConfig.DefaultLang:IT
+   - System.EnableNMigFlag:1
+   - System.UtenteMigrazione.Value:MIGRAZIONE
+   - System.InternationalProject.Value:0
+   - System.PerfMode.Value:0
+   - System.StopWatchEnabled.Value:1
+*********************************************************************************************************
+
+SELECT DISTINCT IDROOTENTRY
+FROM ODODSENTRY
+WHERE CROOTTABLE = 'PCMOV'
+AND NSTATUS <> 1 
+
+Run-time query count = 631 msec
+Run-time query = 59 msec
+Number of records extracted: 54
+
+17/08/2026 07:12:24 --- IDMOV=720479980
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 495696518 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=617956794
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467083955 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=618087376
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467285204 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=208914142
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 141200423 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1158385779
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 1158389511 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=891654207
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 728203817 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=865289976
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 140570624 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1158384362
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 1158389981 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=982167638
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 622958605 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=499172324
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 385714427 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=343381036
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 141200423 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=595568738
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467221522 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=263790055
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 263780261 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1062656691
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 878333470 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1154537152
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 1154537160 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=477714989
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 322981421 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=594937945
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467081568 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=883764421
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 883764650 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=618280784
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 270434434 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=616205215
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467083955 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1067186022
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 106312070 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=505618530
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 270405436 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=890707998
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 728050682 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=867574289
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 867574797 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1044456724
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 568124783 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1030160252
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 495696518 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=609535632
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467208445 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=486908671
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 486920515 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=594113205
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467214494 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=990685065
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 487941628 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=498938160
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 156856578 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1051622801
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 739900789 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=848134566
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 106319411 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=593732418
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 270391201 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1061544880
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 586152444 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1051034411
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 106317721 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=498968994
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 125632063 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=595122497
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 106319411 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=982327526
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 141136511 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=617439522
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467208445 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=608869460
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467083955 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=499580241
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 385830377 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1013573334
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 1015604773 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=505417472
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 385705945 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=610280674
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 270434434 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=1044496338
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 568124783 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=708682673
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 270391201 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=503873593
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 385713338 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=501625040
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 385815465 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=504264100
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 385714107 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=984158674
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 622958620 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=616208836
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 467208445 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=616212939
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 270434434 non trovato
+
+17/08/2026 07:12:24 --- IDMOV=619075976
+E - ErroreSoggettoRefereziatoNonTrovato --> Soggetto referenziato 583865415 non trovato
+
+
+=====================================================================================
+IDEXECUTION     : 1477181509
+=====================================================================================
+PROCESSING SUMMARY
+=====================================================================================
+Starting time   : 17/08/2026 07:12:23
+End time        : 17/08/2026 07:12:29
+=====================================================================================
+Raw data        : 54
+   - Error      : 54
+   - Warning    : 0
+   - OK         : 0
+=====================================================================================
+Batch life: 6 [sec]
+Average pieces per second : 9.00
+=====================================================================================
+
+
+STATUS: FINISHED_OK_WARNINGS
