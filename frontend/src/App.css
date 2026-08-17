@@ -925,6 +925,22 @@ body {
 
 .issues-ctrl-btn:hover { color: var(--text-primary); border-color: var(--text-secondary); }
 
+/* ── Per-layer detail attach / expand (ETL Layer Errors tab) ── */
+.attach-detail-wrap { display: inline-flex; align-items: center; gap: 8px; }
+
+.attach-detail-btn { display: inline-block; }
+.attach-detail-btn--busy { opacity: 0.6; cursor: default; }
+
+.attach-detail-error {
+  color: var(--danger);
+  font-size: 0.76rem;
+  cursor: help;
+}
+
+.layer-detail-row td { padding: 0; background: var(--bg-panel); }
+
+.layer-detail-panel { padding: 16px 20px; }
+
 /* ── Clean / no issues state ── */
 .issues-clean {
   display: flex;
@@ -1774,184 +1790,6 @@ button.ko-upload-btn:disabled {
 .text-muted { color: var(--text-muted); }
 
 /* ═══════════════════════════════════════════════════════════════
-   History tab
-═══════════════════════════════════════════════════════════════ */
-.history-panel {
-  background: var(--bg-panel);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-lg);
-  padding: 26px 28px;
-  box-shadow: var(--shadow-sm);
-}
-
-.history-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.history-title {
-  margin: 0;
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: var(--text-primary);
-}
-
-.history-subtitle {
-  margin: 4px 0 20px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.history-clear-btn {
-  padding: 7px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--border-strong);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s, background 0.15s;
-}
-
-.history-clear-btn:hover { border-color: var(--danger); color: var(--danger); }
-
-.history-clear-btn--confirm {
-  border-color: var(--danger);
-  color: var(--danger);
-  background: var(--danger-bg);
-}
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.history-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding: 16px 18px;
-  background: rgba(var(--veil-rgb), 0.02);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.history-row:hover {
-  border-color: var(--border-strong);
-  background: rgba(var(--veil-rgb), 0.04);
-}
-
-.history-row-main { flex: 1; min-width: 220px; }
-
-.history-row-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 6px;
-}
-
-.history-job-name {
-  font-weight: 700;
-  color: var(--text-primary);
-  word-break: break-word;
-}
-
-.history-row-meta {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
-
-.history-files { font-family: var(--mono); }
-
-.history-row-stats {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.history-stat {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  padding: 2px 9px;
-  border-radius: 999px;
-  background: var(--neutral-bg);
-}
-
-.history-row-actions {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.history-view-btn,
-.history-delete-btn {
-  padding: 7px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--border-strong);
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.15s;
-}
-
-.history-view-btn {
-  background: linear-gradient(135deg, var(--accent-from), var(--accent-to));
-  border-color: transparent;
-  color: #fff;
-}
-
-.history-view-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 18px -8px rgba(124, 92, 255, 0.6); }
-
-.history-delete-btn {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.history-delete-btn:hover { border-color: var(--danger); color: var(--danger); }
-
-.history-empty {
-  text-align: center;
-  padding: 60px 28px;
-  background: var(--bg-panel);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-lg);
-}
-
-.history-empty-icon { font-size: 2.4rem; margin-bottom: 12px; }
-
-.history-empty-title {
-  margin: 0 0 8px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.history-empty-hint {
-  margin: 0 auto;
-  max-width: 420px;
-  font-size: 0.88rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* ═══════════════════════════════════════════════════════════════
    Drag-and-drop upload
 ═══════════════════════════════════════════════════════════════ */
 .upload-field--drag-active {
@@ -2009,7 +1847,4 @@ button.ko-upload-btn:disabled {
   .kv-key { flex-basis: 140px; }
 
   .ic-meta-grid { grid-template-columns: 1fr; }
-
-  .history-row { flex-direction: column; align-items: stretch; }
-  .history-row-actions { justify-content: flex-end; }
 }

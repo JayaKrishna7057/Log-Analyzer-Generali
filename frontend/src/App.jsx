@@ -2,21 +2,18 @@ import { useState } from 'react';
 import FileUpload from './components/FileUpload';
 import ReportView from './components/ReportView';
 import KoReport from './components/KoReport';
-import History from './components/History';
 import ThemeToggle from './components/ThemeToggle';
 import { analyzeLogs } from './api/logAnalyzerApi';
-import { saveToHistory } from './utils/history';
 import './App.css';
 
 const NAV_TABS = [
   { id: 'log-analyzer', label: 'Log Analyzer' },
   { id: 'ko-report', label: 'KO Report' },
-  { id: 'history', label: 'History' },
 ];
 
 function App() {
   const [activeNav, setActiveNav] = useState('log-analyzer');
-  // koReport holds the full KoReportDto: { analysis, records, hasRecordLevelData }
+  // koReport holds the full KoReportDto: { analysis, records, hasRecordLevelData, layerErrorDetails }
   const [koReport, setKoReport] = useState(null);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState(null);
@@ -30,10 +27,6 @@ function App() {
     try {
       const data = await analyzeLogs(stdoutFile, stderrFile);
       setKoReport(data);
-      saveToHistory(data, {
-        stdoutName: stdoutFile?.name ?? null,
-        stderrName: stderrFile?.name ?? null,
-      });
     } catch (err) {
       setError(err.message || 'Failed to analyze logs.');
     } finally {
@@ -52,13 +45,16 @@ function App() {
     setLastFiles(null);
   };
 
-  // Reopens a saved history entry without re-uploading anything: it already carries the exact
-  // response the backend returned when it was first analysed.
-  const handleViewHistoryEntry = (entry) => {
-    setKoReport(entry.koReport);
-    setError(null);
-    setLastFiles(null);
-    setActiveNav('log-analyzer');
+  // Merges a parsed per-layer detail file into the current report, keyed by the executionId it
+  // was attached to.
+  const handleAttachLayerDetail = (executionId, detail) => {
+    setKoReport((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        layerErrorDetails: { ...(prev.layerErrorDetails || {}), [executionId]: detail },
+      };
+    });
   };
 
   // ReportView receives only the AnalysisReport portion; KoReport receives the full
@@ -127,11 +123,7 @@ function App() {
         )}
 
         {activeNav === 'ko-report' && (
-          <KoReport report={koReport} onClear={handleClear} />
-        )}
-
-        {activeNav === 'history' && (
-          <History onViewEntry={handleViewHistoryEntry} />
+          <KoReport report={koReport} onClear={handleClear} onAttachLayerDetail={handleAttachLayerDetail} />
         )}
       </main>
     </div>

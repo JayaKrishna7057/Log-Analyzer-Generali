@@ -2,6 +2,7 @@ package com.loganalyzer.controller;
 
 import com.loganalyzer.model.FormatInfoDto;
 import com.loganalyzer.service.KoReportService;
+import com.loganalyzer.service.LayerErrorDetailService;
 import com.loganalyzer.service.profile.ProfileRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +27,13 @@ public class LogAnalysisController {
 
     private final KoReportService koReportService;
     private final ProfileRegistry profileRegistry;
+    private final LayerErrorDetailService layerErrorDetailService;
 
-    public LogAnalysisController(KoReportService koReportService, ProfileRegistry profileRegistry) {
+    public LogAnalysisController(KoReportService koReportService, ProfileRegistry profileRegistry,
+                                  LayerErrorDetailService layerErrorDetailService) {
         this.koReportService = koReportService;
         this.profileRegistry = profileRegistry;
+        this.layerErrorDetailService = layerErrorDetailService;
     }
 
     /**
@@ -59,6 +63,26 @@ public class LogAnalysisController {
             log.error("Failed to read uploaded log file(s)", e);
             return ResponseEntity.internalServerError()
                     .body(Map.of("error", "Failed to read uploaded file(s). Please verify the files and try again."));
+        }
+    }
+
+    /**
+     * Parses a single per-layer detail file - the standalone stdout a batch layer writes for
+     * itself, attached from the ETL Layer Errors tab to see which records failed and why.
+     */
+    @PostMapping(value = "/layer-detail", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> layerDetail(@RequestParam("file") MultipartFile file) {
+
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "A file is required."));
+        }
+
+        try {
+            return ResponseEntity.ok(layerErrorDetailService.parse(file));
+        } catch (IOException e) {
+            log.error("Failed to read uploaded layer detail file", e);
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Failed to read uploaded file. Please verify the file and try again."));
         }
     }
 

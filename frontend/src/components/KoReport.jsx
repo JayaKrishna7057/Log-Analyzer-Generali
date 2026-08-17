@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { statusClass, categoryLabel, PAGE_SIZE } from '../utils/status';
 import { hasExtraMetrics, formatExtraMetrics } from '../utils/metrics';
-import { downloadKoReportCsv } from '../utils/csv';
+import { downloadKoReportCsv, downloadLayerErrorDetailsCsv } from '../utils/csv';
+import { analyzeLayerDetail } from '../api/logAnalyzerApi';
 
 /* ── Status badges ───────────────────────────────────────────────── */
 
@@ -464,15 +465,313 @@ function IssuesTab({ issues }) {
   );
 }
 
+/* ── ETL Layer Errors tab ────────────────────────────────────────── */
+
+/** One row per (record, error) pair - warnings are left out for now, so a record's warning line
+ *  (e.g. a missing optional table) doesn't crowd out the actual failure reason next to it. */
+function flattenDetailRecords(detail) {
+  const rows = [];
+  (detail?.records || []).forEach((r) => {
+    (r.issues || [])
+      .filter((issue) => issue.severity === 'ERROR')
+      .forEach((issue) => {
+        rows.push({
+          timestamp: r.timestamp,
+          recordKey: r.recordKey,
+          recordId: r.recordId,
+          severity: issue.severity,
+          code: issue.code,
+          message: issue.message,
+        });
+      });
+  });
+  return rows;
+}
+
+function LayerDetailTable({ detail }) {
+  const [search, setSearch] = useState('');
+  const [shown,  setShown]  = useState(PAGE_SIZE);
+
+  const allRows = flattenDetailRecords(detail);
+  const q = search.trim().toLowerCase();
+  const visible = q
+    ? allRows.filter(r =>
+        (r.recordKey || '').toLowerCase().includes(q)
+        || (r.recordId || '').toLowerCase().includes(q)
+        || (r.code || '').toLowerCase().includes(q)
+        || (r.message || '').toLowerCase().includes(q))
+    : allRows;
+
+  const page = visible.slice(0, shown);
+
+  return (
+    <div className="layer-detail-panel">
+      <div className="filter-bar">
+        <input
+          className="search-input"
+          placeholder={`Search ${allRows.length} records…`}
+          value={search}
+          onChange={e => { setSearch(e.target.value); setShown(PAGE_SIZE); }}
+        />
+        <span className="filter-count">{visible.length} / {allRows.length}</span>
+      </div>
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Field</th>
+              <th>ID</th>
+              <th>Severity</th>
+              <th>Code</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.map((r, i) => (
+              <tr key={i}>
+                <td className="nowrap-cell">{r.timestamp ?? 'N/A'}</td>
+                <td>{r.recordKey}</td>
+                <td className="mono-cell">{r.recordId}</td>
+                <td>
+                  {r.severity
+                    ? <span className={`severity-tag severity-${r.severity.toLowerCase()}`}>{r.severity}</span>
+                    : <span className="text-muted">—</span>}
+                </td>
+                <td>{r.code ?? <span className="text-muted">—</span>}</td>
+                <td className="ko-reason-cell">{r.message ?? ''}</td>
+              </tr>
+            ))}
+            {!page.length && (
+              <tr>
+                <td colSpan={6} className="empty-row">No matching records.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+      {shown < visible.length && (
+        <div className="pager">
+          <button className="issues-ctrl-btn" onClick={() => setShown(s => s + PAGE_SIZE)}>
+            Show {Math.min(PAGE_SIZE, visible.length - shown)} more
+          </button>
+          <span className="pager-info">Showing {page.length} of {visible.length}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** A row's attach control: a hidden file input plus a busy/error state for its own upload. */
+function AttachDetailButton({ onFile, disabled }) {
+  const [busy,  setBusy]  = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleChange = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-selecting the same file after an error
+    if (!file) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await onFile(file);
+    } catch (err) {
+      setError(err.message || 'Failed to analyze the file.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <span className="attach-detail-wrap">
+      <label className={`issues-ctrl-btn attach-detail-btn${disabled || busy ? ' attach-detail-btn--busy' : ''}`}>
+        {busy ? 'Analyzing…' : 'Attach detail file'}
+        <input type="file" accept=".txt,.log,.out" onChange={handleChange} disabled={disabled || busy} hidden />
+      </label>
+      {error && <span className="attach-detail-error" title={error}>⚠️ {error}</span>}
+    </span>
+  );
+}
+
+function ErrorLayersTab({ layers, details, onAttach, jobName }) {
+  const [search, setSearch] = useState('');
+  const [shown,  setShown]  = useState(PAGE_SIZE);
+  const [expanded, setExpanded] = useState(() => new Set());
+
+  const attachedCount = Object.keys(details || {}).length;
+
+  const toggleExpanded = (executionId) => {
+    setExpanded(prev => {
+      const next = new Set(prev);
+      next.has(executionId) ? next.delete(executionId) : next.add(executionId);
+      return next;
+    });
+  };
+
+  // Worst offenders first, so a run with dozens of layers still leads with what matters.
+  const sorted = [...layers].sort((a, b) => (b.errorCount ?? 0) - (a.errorCount ?? 0));
+
+  const q = search.trim().toLowerCase();
+  const visible = q
+    ? sorted.filter(l => (l.layerName || '').toLowerCase().includes(q)
+        || (l.status || '').toLowerCase().includes(q))
+    : sorted;
+
+  const page = visible.slice(0, shown);
+
+  const totalErrors = layers.reduce((s, l) => s + (l.errorCount ?? 0), 0);
+  const totalRaw    = layers.reduce((s, l) => s + (l.rawData ?? 0), 0);
+
+  const errorRate = (l) => (l.rawData ? ((l.errorCount ?? 0) / l.rawData * 100).toFixed(1) + '%' : 'N/A');
+
+  return (
+    <div>
+      <div className="ko-stats-row">
+        <span className="issues-pill issues-pill--error">
+          ✕ {layers.length} layer{layers.length !== 1 ? 's' : ''} with errors
+        </span>
+        <span className="ko-stat-pill" style={{ color: 'var(--text-secondary)' }}>
+          Total errors <span className="ko-stat-n">{totalErrors}</span>
+        </span>
+        {totalRaw > 0 && (
+          <span className="ko-stat-pill" style={{ color: 'var(--text-secondary)' }}>
+            Overall error rate <span className="ko-stat-n">{(totalErrors / totalRaw * 100).toFixed(1)}%</span>
+          </span>
+        )}
+        {attachedCount > 0 && (
+          <button
+            type="button"
+            className="download-csv-btn"
+            style={{ marginLeft: 'auto' }}
+            onClick={() => downloadLayerErrorDetailsCsv(jobName, details)}
+            title={`Download error records from ${attachedCount} attached layer${attachedCount !== 1 ? 's' : ''}`}
+          >
+            <span aria-hidden="true">⬇️</span> Download Record Detail CSV
+          </button>
+        )}
+      </div>
+
+      <div className="filter-bar">
+        <input
+          className="search-input"
+          placeholder={`Search ${layers.length} layers…`}
+          value={search}
+          onChange={e => { setSearch(e.target.value); setShown(PAGE_SIZE); }}
+        />
+        <span className="filter-count">{visible.length} / {layers.length}</span>
+      </div>
+
+      <div className="table-wrapper">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Execution ID</th>
+              <th>Raw</th>
+              <th>OK</th>
+              <th>Error</th>
+              <th>Error Rate</th>
+              <th>Warning</th>
+              <th>KO</th>
+              <th>Status</th>
+              <th>Duration</th>
+              <th>Record Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            {page.map((l, i) => {
+              const executionId = l.executionId;
+              const detail = executionId ? details?.[executionId] : null;
+              const isExpanded = executionId && expanded.has(executionId);
+
+              return (
+                <Fragment key={i}>
+                  <tr>
+                    <td>{l.layerName}</td>
+                    <td className="mono-cell">{executionId ?? 'N/A'}</td>
+                    <td className="num-cell">{l.rawData ?? 'N/A'}</td>
+                    <td className="num-cell">{l.okCount ?? 'N/A'}</td>
+                    <td className="num-cell">{l.errorCount ?? 'N/A'}</td>
+                    <td className="num-cell">{errorRate(l)}</td>
+                    <td className="num-cell">{l.warningCount ?? 'N/A'}</td>
+                    <td className="num-cell">{l.koCount ?? 'N/A'}</td>
+                    <td><StatusBadge status={l.status} /></td>
+                    <td className="nowrap-cell">{l.duration ?? 'N/A'}</td>
+                    <td>
+                      {!executionId || !onAttach ? (
+                        <span className="text-muted">—</span>
+                      ) : detail ? (
+                        <button
+                          type="button"
+                          className="issues-ctrl-btn"
+                          onClick={() => toggleExpanded(executionId)}
+                        >
+                          {isExpanded ? '▾' : '▸'} {detail.records.length} record{detail.records.length !== 1 ? 's' : ''}
+                        </button>
+                      ) : (
+                        <AttachDetailButton
+                          onFile={async (file) => {
+                            const parsed = await analyzeLayerDetail(file);
+                            // The file names its own execution - trust that over which row's
+                            // button opened the picker, so attaching the wrong file (e.g. the
+                            // OS dialog re-offering the last pick) is rejected instead of
+                            // silently showing one layer's records under another's row.
+                            if (parsed.executionId && parsed.executionId !== executionId) {
+                              throw new Error(
+                                `This file belongs to "${parsed.layerName || 'another layer'}" `
+                                + `(execution ${parsed.executionId}), not "${l.layerName}" `
+                                + `(execution ${executionId}). Choose the detail file for this layer.`
+                              );
+                            }
+                            onAttach(executionId, parsed);
+                          }}
+                        />
+                      )}
+                    </td>
+                  </tr>
+                  {isExpanded && detail && (
+                    <tr key={`${i}-detail`} className="layer-detail-row">
+                      <td colSpan={11}>
+                        <LayerDetailTable detail={detail} />
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
+            {!page.length && (
+              <tr>
+                <td colSpan={11} className="empty-row">No matching layers.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {shown < visible.length && (
+        <div className="pager">
+          <button className="issues-ctrl-btn" onClick={() => setShown(s => s + PAGE_SIZE)}>
+            Show {Math.min(PAGE_SIZE, visible.length - shown)} more
+          </button>
+          <span className="pager-info">Showing {page.length} of {visible.length}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ── Root component ──────────────────────────────────────────────── */
 
-export default function KoReport({ report, onClear }) {
+export default function KoReport({ report, onClear, onAttachLayerDetail }) {
   const [tab, setTab] = useState('summary');
 
-  // Reset to summary tab whenever a new report arrives.
+  // Reset to summary tab whenever a genuinely new analysis arrives - keyed on `analysis` rather
+  // than `report` because attaching a layer detail file replaces `report` in place (to add
+  // layerErrorDetails) without changing the analysis itself, and that must not throw the user
+  // back to Summary right after they attached something on another tab.
   useEffect(() => {
     if (report) setTab('summary');
-  }, [report]);
+  }, [report?.analysis ?? report]);
 
   if (!report) {
     return (
@@ -500,8 +799,13 @@ export default function KoReport({ report, onClear }) {
   const koCount = records.filter(r => r.status === 'KO').length;
   const issues  = analysis.issues || [];
 
+  const allLayers = [...(analysis.completedEtlLayers || []), ...(analysis.inProgressEtlLayers || [])];
+  const errorLayers = allLayers.filter(l => (l.errorCount ?? 0) > 0);
+  const layerErrorDetails = report.layerErrorDetails || {};
+
   const tabs = [
     { id: 'summary', label: 'Summary' },
+    errorLayers.length > 0 && { id: 'error-layers', label: `ETL Layer Errors (${errorLayers.length})` },
     hasRecordLevelData && { id: 'records', label: `All Records (${records.length})` },
     hasRecordLevelData && koCount > 0 && { id: 'ko', label: `KO Details (${koCount})` },
     issues.length > 0 && { id: 'issues', label: `Issues (${issues.length})` },
@@ -548,6 +852,14 @@ export default function KoReport({ report, onClear }) {
 
       <div className="tab-content">
         {tab === 'summary' && <SummaryTab analysis={analysis} />}
+        {tab === 'error-layers' && errorLayers.length > 0 && (
+          <ErrorLayersTab
+            layers={errorLayers}
+            details={layerErrorDetails}
+            onAttach={onAttachLayerDetail}
+            jobName={analysis.jobName}
+          />
+        )}
         {tab === 'records' && hasRecordLevelData && <RecordsTab records={records} />}
         {tab === 'ko' && hasRecordLevelData && koCount > 0 && <KoDetailsTab records={records} />}
         {tab === 'issues' && issues.length > 0 && <IssuesTab issues={issues} />}

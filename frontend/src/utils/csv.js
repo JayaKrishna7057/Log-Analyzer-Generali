@@ -219,3 +219,40 @@ export function downloadKoReportCsv(koReport) {
   const csv = koReportToCsv(koReport);
   downloadCsvText(csv, `${safeFileName(koReport.analysis?.jobName, 'ko_report')}.csv`);
 }
+
+/**
+ * Flattens every attached layer's error records into one CSV - across every ETL layer that has
+ * had a detail file attached, not just whichever one is currently expanded, so a single download
+ * covers the whole run's record-level failures. Matches the errors-only filter the on-screen
+ * table applies: warning lines attached to a record are left out.
+ */
+function layerErrorDetailsToCsv(layerErrorDetails) {
+  const lines = ['sep=,'];
+  lines.push(row('Layer', 'Execution ID', 'Timestamp', 'Field', 'ID', 'Severity', 'Code', 'Message'));
+
+  Object.values(layerErrorDetails || {}).forEach((detail) => {
+    (detail.records || []).forEach((r) => {
+      (r.issues || [])
+        .filter((issue) => issue.severity === 'ERROR')
+        .forEach((issue) => {
+          lines.push(row(
+            detail.layerName,
+            detail.executionId,
+            r.timestamp,
+            r.recordKey,
+            r.recordId,
+            issue.severity,
+            issue.code,
+            issue.message
+          ));
+        });
+    });
+  });
+
+  return lines.join('\r\n');
+}
+
+export function downloadLayerErrorDetailsCsv(jobName, layerErrorDetails) {
+  const csv = layerErrorDetailsToCsv(layerErrorDetails);
+  downloadCsvText(csv, `${safeFileName(jobName, 'log_analysis')}_error_records.csv`);
+}

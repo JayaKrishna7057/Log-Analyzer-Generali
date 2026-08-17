@@ -68,6 +68,39 @@ export async function analyzeLogs(stdoutFile, stderrFile) {
 }
 
 /**
+ * Parses a single per-layer detail file attached from the ETL Layer Errors tab and returns a
+ * LayerErrorDetailDto: { executionId, layerName, rawData, errorCount, warningCount, okCount,
+ * status, records: [{ timestamp, recordKey, recordId, issues: [{ severity, code, message }] }] }.
+ *
+ * @param {File} file
+ * @returns {Promise<object>} LayerErrorDetailDto
+ */
+export async function analyzeLayerDetail(file) {
+  if (!file) {
+    throw new Error('Select a file to analyze.');
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    return await postToBackend(`${API_BASE_URL}/layer-detail`, formData);
+  } catch (err) {
+    if (!(err instanceof TypeError)) {
+      throw err;
+    }
+    await sleep(RETRY_DELAY_MS);
+    try {
+      return await postToBackend(`${API_BASE_URL}/layer-detail`, formData);
+    } catch {
+      throw new Error(
+        'Could not reach the analysis server. Please check it is running and try again.'
+      );
+    }
+  }
+}
+
+/**
  * Log dialects the backend can recognise: [{ id, displayName }, ...].
  *
  * Read from the backend rather than kept as a list in the frontend, so what the UI advertises as
