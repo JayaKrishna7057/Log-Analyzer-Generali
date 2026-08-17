@@ -1,0 +1,27 @@
+SLF4J: Failed to load class "org.slf4j.impl.StaticMDCBinder".
+SLF4J: Defaulting to no-operation MDCAdapter implementation.
+SLF4J: See http://www.slf4j.org/codes.html#no_static_mdc_binder for further details.
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Exception in component tDBOutput_2 (ES_EngineCOA_01)
+org.postgresql.util.PSQLException: ERROR: relation "dweecoacl" already exists
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2713)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2401)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:368)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:498)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:415)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:335)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:321)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:297)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:292)
+	at dw.es_enginecoa_01_0_6.ES_EngineCOA_01.tDBInput_2Process(ES_EngineCOA_01.java:10519)
+	at dw.es_enginecoa_01_0_6.ES_EngineCOA_01.tDBInput_1Process(ES_EngineCOA_01.java:6711)
+	at dw.es_enginecoa_01_0_6.ES_EngineCOA_01.tDBRow_1Process(ES_EngineCOA_01.java:1988)
+	at dw.es_enginecoa_01_0_6.ES_EngineCOA_01.tDBRow_7Process(ES_EngineCOA_01.java:1653)
+	at dw.es_enginecoa_01_0_6.ES_EngineCOA_01.tDBConnection_3Process(ES_EngineCOA_01.java:1324)
+	at dw.es_enginecoa_01_0_6.ES_EngineCOA_01.tDBConnection_1Process(ES_EngineCOA_01.java:979)
+	at dw.es_enginecoa_01_0_6.ES_EngineCOA_01.runJobInTOS(ES_EngineCOA_01.java:13803)
+	at com.rgigroup.bdbi.passanalytics.batch.TalendRunner.exec(TalendRunner.java:110)
+	at com.rgigroup.bdbi.passanalytics.batch.TalendRunner.exec(TalendRunner.java:71)
+	at com.rgigroup.bdbi.passanalytics.batch.TalendRunner.main(TalendRunner.java:37)
