@@ -679,13 +679,17 @@ function ErrorLayersTab({ layers, details, onAttach, jobName }) {
             </tr>
           </thead>
           <tbody>
-            {page.map((l, i) => {
+            {page.map((l) => {
               const executionId = l.executionId;
               const detail = executionId ? details?.[executionId] : null;
               const isExpanded = executionId && expanded.has(executionId);
+              // Layer name + execution id, not array position - an index key let a row's attach
+              // error/busy state survive onto a *different* layer once search filtering changed
+              // which layer occupied that index.
+              const rowKey = `${l.layerName}::${executionId ?? 'N/A'}`;
 
               return (
-                <Fragment key={i}>
+                <Fragment key={rowKey}>
                   <tr>
                     <td>{l.layerName}</td>
                     <td className="mono-cell">{executionId ?? 'N/A'}</td>
@@ -715,12 +719,17 @@ function ErrorLayersTab({ layers, details, onAttach, jobName }) {
                             // The file names its own execution - trust that over which row's
                             // button opened the picker, so attaching the wrong file (e.g. the
                             // OS dialog re-offering the last pick) is rejected instead of
-                            // silently showing one layer's records under another's row.
-                            if (parsed.executionId && parsed.executionId !== executionId) {
+                            // silently showing one layer's records under another's row. A file
+                            // with no IDEXECUTION line at all is rejected too - it can't be
+                            // verified against this row, so it isn't safe to trust by default.
+                            if (parsed.executionId !== executionId) {
                               throw new Error(
-                                `This file belongs to "${parsed.layerName || 'another layer'}" `
-                                + `(execution ${parsed.executionId}), not "${l.layerName}" `
-                                + `(execution ${executionId}). Choose the detail file for this layer.`
+                                parsed.executionId
+                                  ? `This file belongs to "${parsed.layerName || 'another layer'}" `
+                                    + `(execution ${parsed.executionId}), not "${l.layerName}" `
+                                    + `(execution ${executionId}). Choose the detail file for this layer.`
+                                  : `This file has no execution id ("IDEXECUTION") - it can't be `
+                                    + `verified as belonging to "${l.layerName}" (execution ${executionId}).`
                               );
                             }
                             onAttach(executionId, parsed);
@@ -730,7 +739,7 @@ function ErrorLayersTab({ layers, details, onAttach, jobName }) {
                     </td>
                   </tr>
                   {isExpanded && detail && (
-                    <tr key={`${i}-detail`} className="layer-detail-row">
+                    <tr className="layer-detail-row">
                       <td colSpan={11}>
                         <LayerDetailTable detail={detail} />
                       </td>
