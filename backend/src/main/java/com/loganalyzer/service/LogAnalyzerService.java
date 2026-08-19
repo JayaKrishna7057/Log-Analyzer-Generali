@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -772,12 +773,17 @@ public class LogAnalyzerService {
         return preferred != null ? preferred : fallback;
     }
 
+    /** {@code yyyy-MM-dd HH:mm:ss} - a space rather than LocalDateTime's default ISO 'T', so every
+     *  timestamp in the report reads the same way a person would write it down. */
+    private static final DateTimeFormatter DISPLAY_TIMESTAMP_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private String formatTimestamp(LocalDateTime timestamp) {
-        return timestamp != null ? timestamp.toString() : NOT_AVAILABLE;
+        return timestamp != null ? DISPLAY_TIMESTAMP_FORMAT.format(timestamp) : NOT_AVAILABLE;
     }
 
     private String formatTimestampOrNull(LocalDateTime timestamp) {
-        return timestamp != null ? timestamp.toString() : null;
+        return timestamp != null ? DISPLAY_TIMESTAMP_FORMAT.format(timestamp) : null;
     }
 
     private String formatDurationBetween(LocalDateTime start, LocalDateTime end) {

@@ -103,7 +103,7 @@ function LayerTable({ title, icon, layers, showProgress }) {
                 <td className="num-cell">{layer.warningCount ?? 'N/A'}</td>
                 <td className="num-cell">{layer.okCount ?? 'N/A'}</td>
                 <td className="num-cell">{layer.koCount ?? 'N/A'}</td>
-                <td><StatusBadge status={layer.status} /></td>
+                <td className="status-cell"><StatusBadge status={layer.status} /></td>
                 {showExtras && <td>{formatExtraMetrics(layer) ?? 'N/A'}</td>}
                 {showProgress && <td>{layer.progress ?? 'N/A'}</td>}
               </tr>

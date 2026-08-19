@@ -222,12 +222,12 @@ class LogAnalyzerServiceTest {
     class Timestamps {
 
         @Test
-        @DisplayName("layer timestamps in dd/MM/yyyy become an ISO range and a H:MM:SS duration")
+        @DisplayName("layer timestamps in dd/MM/yyyy become a yyyy-MM-dd HH:mm:ss range and a H:MM:SS duration")
         void parsesSlashTimestampsInLayerMode() throws IOException {
             AnalysisReport report = analyzeStdout(batchHeader() + layerBlock("CORE", "OK"));
 
-            assertThat(report.overallStartTime()).isEqualTo("2026-08-01T22:00:04");
-            assertThat(report.overallEndTime()).isEqualTo("2026-08-01T22:41:37");
+            assertThat(report.overallStartTime()).isEqualTo("2026-08-01 22:00:04");
+            assertThat(report.overallEndTime()).isEqualTo("2026-08-01 22:41:37");
             assertThat(report.overallDuration()).isEqualTo("0:41:33");
         }
 
@@ -242,8 +242,8 @@ class LogAnalyzerServiceTest {
             AnalysisReport report = analyzeStdout(log);
 
             assertThat(report.mode()).isEqualTo("legacy");
-            assertThat(report.overallStartTime()).isEqualTo("2026-08-01T23:10:02");
-            assertThat(report.overallEndTime()).isEqualTo("2026-08-01T23:12:45");
+            assertThat(report.overallStartTime()).isEqualTo("2026-08-01 23:10:02");
+            assertThat(report.overallEndTime()).isEqualTo("2026-08-01 23:12:45");
             assertThat(report.overallDuration()).isEqualTo("0:02:43");
         }
 
@@ -257,7 +257,7 @@ class LogAnalyzerServiceTest {
 
             AnalysisReport report = analyzeStdout(log);
 
-            assertThat(report.overallStartTime()).isEqualTo("2026-08-01T23:10:02");
+            assertThat(report.overallStartTime()).isEqualTo("2026-08-01 23:10:02");
             assertThat(report.overallDuration()).isEqualTo("0:05:10");
         }
 
@@ -272,7 +272,7 @@ class LogAnalyzerServiceTest {
 
             AnalysisReport report = analyzeStdout(log);
 
-            assertThat(report.overallStartTime()).isEqualTo("2026-08-01T23:10:02");
+            assertThat(report.overallStartTime()).isEqualTo("2026-08-01 23:10:02");
         }
 
         @Test

@@ -130,7 +130,7 @@ function SummaryTab({ analysis }) {
                     <td className="num-cell">{l.koCount ?? 'N/A'}</td>
                     <td className="num-cell">{l.errorCount ?? 'N/A'}</td>
                     <td className="num-cell">{l.warningCount ?? 'N/A'}</td>
-                    <td><StatusBadge status={l.status} /></td>
+                    <td className="status-cell"><StatusBadge status={l.status} /></td>
                     {showExtras && <td>{formatExtraMetrics(l) ?? 'N/A'}</td>}
                   </tr>
                 ))}
@@ -584,8 +584,11 @@ function AttachDetailButton({ onFile, disabled }) {
 
   return (
     <span className="attach-detail-wrap">
-      <label className={`issues-ctrl-btn attach-detail-btn${disabled || busy ? ' attach-detail-btn--busy' : ''}`}>
-        {busy ? 'Analyzing…' : 'Attach detail file'}
+      <label
+        className={`issues-ctrl-btn attach-detail-btn${disabled || busy ? ' attach-detail-btn--busy' : ''}`}
+        title="Attach detail file"
+      >
+        {busy ? 'Analyzing…' : 'Attach file'}
         <input type="file" accept=".txt,.log,.out" onChange={handleChange} disabled={disabled || busy} hidden />
       </label>
       {error && <span className="attach-detail-error" title={error}>⚠️ {error}</span>}
@@ -699,7 +702,7 @@ function ErrorLayersTab({ layers, details, onAttach, jobName }) {
                     <td className="num-cell">{errorRate(l)}</td>
                     <td className="num-cell">{l.warningCount ?? 'N/A'}</td>
                     <td className="num-cell">{l.koCount ?? 'N/A'}</td>
-                    <td><StatusBadge status={l.status} /></td>
+                    <td className="status-cell"><StatusBadge status={l.status} /></td>
                     <td className="nowrap-cell">{l.duration ?? 'N/A'}</td>
                     <td>
                       {!executionId || !onAttach ? (

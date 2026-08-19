@@ -2,8 +2,10 @@ package com.loganalyzer.controller;
 
 import com.loganalyzer.model.AnalysisReport;
 import com.loganalyzer.model.KoReportDto;
+import com.loganalyzer.model.LayerErrorDetailDto;
 import com.loganalyzer.model.RecordStatusDto;
 import com.loganalyzer.service.KoReportService;
+import com.loganalyzer.service.LayerErrorDetailService;
 import com.loganalyzer.service.profile.ProfileRegistry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,9 @@ class LogAnalysisControllerTest {
 
     @MockBean
     private KoReportService koReportService;
+
+    @MockBean
+    private LayerErrorDetailService layerErrorDetailService;
 
     @Test
     @DisplayName("an uploaded log is analysed and returned as JSON")
@@ -93,6 +98,28 @@ class LogAnalysisControllerTest {
         mockMvc.perform(multipart("/api/analyze").file(logFile("stdout")))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.error").exists());
+    }
+
+    @Test
+    @DisplayName("a per-layer detail file is parsed and returned as JSON")
+    void returnsLayerDetailForAnUpload() throws Exception {
+        given(layerErrorDetailService.parse(any())).willReturn(new LayerErrorDetailDto(
+                "1477181509", "ODS_Policy", 54, 54, 0, 0, "FINISHED_OK_WARNINGS", List.of()));
+
+        mockMvc.perform(multipart("/api/layer-detail").file(logFile("file")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.executionId").value("1477181509"))
+                .andExpect(jsonPath("$.layerName").value("ODS_Policy"));
+    }
+
+    @Test
+    @DisplayName("a layer-detail request with no file is rejected")
+    void rejectsLayerDetailRequestWithNoFile() throws Exception {
+        mockMvc.perform(multipart("/api/layer-detail"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("A file is required."));
+
+        verifyNoInteractions(layerErrorDetailService);
     }
 
     @Test

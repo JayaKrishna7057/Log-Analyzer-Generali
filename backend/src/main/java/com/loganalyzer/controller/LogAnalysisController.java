@@ -71,7 +71,7 @@ public class LogAnalysisController {
      * itself, attached from the ETL Layer Errors tab to see which records failed and why.
      */
     @PostMapping(value = "/layer-detail", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> layerDetail(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> layerDetail(@RequestParam(value = "file", required = false) MultipartFile file) {
 
         if (file == null || file.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "A file is required."));
