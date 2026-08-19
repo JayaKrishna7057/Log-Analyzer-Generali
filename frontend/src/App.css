@@ -668,6 +668,13 @@ body {
   max-width: 200px;
 }
 
+/* The attach/expand control is much narrower than the column table-layout:auto gives it once the
+   table fills the wrapper's width - centering keeps it from sitting lopsided at the left edge
+   with a large empty gap on the right. */
+.record-detail-cell {
+  text-align: center;
+}
+
 .num-cell {
   text-align: right;
   font-family: var(--mono);
@@ -685,6 +692,10 @@ body {
 .status-cell {
   min-width: 140px;
   max-width: 150px;
+  /* The badge is inline-block now (see below), which sits at the cell's default left edge - the
+     column often ends up wider than the badge itself (table-layout:auto rounds up to fill
+     available space), leaving it lopsided without this. */
+  text-align: center;
 }
 
 .status-cell .status-badge {

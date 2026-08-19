@@ -718,7 +718,7 @@ function ErrorLayersTab({ layers, details, onAttach, jobName }) {
                     <td className="num-cell">{l.koCount ?? 'N/A'}</td>
                     <td className="status-cell"><StatusBadge status={l.status} /></td>
                     <td className="nowrap-cell">{l.duration ?? 'N/A'}</td>
-                    <td>
+                    <td className="record-detail-cell">
                       {!executionId || !onAttach ? (
                         <span className="text-muted">—</span>
                       ) : detail ? (
