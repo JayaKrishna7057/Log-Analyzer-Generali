@@ -677,21 +677,44 @@ body {
 }
 
 /* A long status string (e.g. FINISHED_OK_WARNINGS) forced the whole column wide when the badge
-   stayed on one line - letting it wrap keeps the column no wider than the data actually needs. */
+   stayed on one line - letting it wrap keeps the column no wider than the data actually needs.
+   min-width guarantees enough room for the common case (FINISHED_OK) to never wrap: table-layout:
+   auto treats a cell's max-width as advisory only, but honours min-width as a real constraint on
+   the column's computed size, so without it the column can still get squeezed below what even the
+   short/common statuses need. */
 .status-cell {
+  min-width: 140px;
   max-width: 150px;
 }
 
 .status-cell .status-badge {
   /* table-layout:auto only treats a <td>'s max-width as a sizing hint, not a hard cap, so the
      constraint has to sit on the badge itself to reliably force wrapping instead of stretching
-     the whole column. word-break matters too: statuses like FINISHED_OK_WARNINGS are
-     underscore-joined with no spaces, so white-space:normal alone has no break point to wrap at. */
-  max-width: 128px;
+     the whole column. Wide enough that the common case (FINISHED_OK) never wraps at all - only
+     genuinely long statuses (FINISHED_OK_WARNINGS) do, and only at a <wbr> the component inserts
+     after each underscore, never mid-word.
+     display:inline-block rather than the badge's normal inline-flex: a flex container
+     blockifies its children regardless of their own display value, and the flex sizing
+     algorithm gave the wrapping text span ~14px instead of respecting its content - flexbox
+     and a <wbr>-driven wrap don't mix, so this drops flex for the badges that need to wrap. */
+  /* No word-break here on purpose: the component's own <wbr> after each underscore is the only
+     break point that should ever be used. word-break:break-word additionally allows breaking
+     anywhere, which made the table's auto column-width algorithm see a near-zero minimum content
+     width for this cell and starve it down to ~45px instead of the 148px cap below. */
+  display: inline-block;
+  max-width: 148px;
   white-space: normal;
-  word-break: break-word;
   text-align: center;
   line-height: 1.3;
+}
+
+.status-cell .status-badge-text {
+  display: inline;
+}
+
+/* The gap the badge normally gets from flexbox doesn't apply once display is overridden above. */
+.status-cell .status-badge > span:first-child {
+  margin-right: 4px;
 }
 
 /* ═══════════════════════════════════════════════════════════════

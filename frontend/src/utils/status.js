@@ -60,5 +60,14 @@ export function categoryLabel(category) {
   return CATEGORY_LABELS[category] || category;
 }
 
+/**
+ * Splits a status like "FINISHED_OK_WARNINGS" into ["FINISHED", "OK", "WARNINGS"], so a badge that
+ * has to wrap can only break between words - never mid-word (e.g. "FINISHED_O" / "K"), which is
+ * what plain CSS word-breaking does to an underscore-joined string with no space to break at.
+ */
+export function statusWords(status) {
+  return (status || 'N/A').split('_');
+}
+
 /** Rows rendered before the "show more" pager in the record and issue tables. */
 export const PAGE_SIZE = 100;

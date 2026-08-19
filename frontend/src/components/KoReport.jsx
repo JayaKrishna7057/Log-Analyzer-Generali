@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
-import { statusClass, categoryLabel, PAGE_SIZE } from '../utils/status';
+import { statusClass, statusWords, categoryLabel, PAGE_SIZE } from '../utils/status';
 import { hasExtraMetrics, formatExtraMetrics } from '../utils/metrics';
 import { downloadKoReportCsv, downloadLayerErrorDetailsCsv } from '../utils/csv';
 import { analyzeLayerDetail } from '../api/logAnalyzerApi';
@@ -7,7 +7,21 @@ import { analyzeLayerDetail } from '../api/logAnalyzerApi';
 /* ── Status badges ───────────────────────────────────────────────── */
 
 function StatusBadge({ status }) {
-  return <span className={`status-badge ${statusClass(status)}`}>{status || 'N/A'}</span>;
+  return (
+    <span className={`status-badge ${statusClass(status)}`}>
+      {/* A plain inline span, not a flex item's direct text - <wbr> inside a flex container
+          gets treated as its own flex item and wraps character-by-character instead of at the
+          word boundary it marks. Wrapping it in its own box sidesteps that entirely. */}
+      <span className="status-badge-text">
+        {statusWords(status).map((word, i) => (
+          <Fragment key={i}>
+            {i > 0 && <>_<wbr /></>}
+            {word}
+          </Fragment>
+        ))}
+      </span>
+    </span>
+  );
 }
 
 /**
